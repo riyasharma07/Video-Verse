@@ -1,22 +1,17 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { AppDataSource } from 'src/db/dbService';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Video } from 'src/db/video.entity';
-import { Repository, QueryRunner } from 'typeorm';
 
 @Injectable()
 export class VideoRepository {
-  private repository: Repository<Video>;
+  constructor(
+    @InjectRepository(Video)
+    private readonly repository: Repository<Video>,
+  ) {}
 
-  constructor() {
-    this.repository = AppDataSource.getRepository(Video);
+  async save(video: Video): Promise<Video> {
+    return await this.repository.save(video);
   }
-
-  private getRepository(queryRunner?: QueryRunner): Repository<Video> {
-    if (queryRunner) {
-      return queryRunner.manager.getRepository(Video);
-    }
-    return this.repository;
-  }
-
 }
