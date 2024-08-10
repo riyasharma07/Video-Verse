@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, UseInterceptors, UploadedFile, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, Body, BadRequestException, Param, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,5 +42,19 @@ export class VideoController {
     }
 
     return this.videoService.uploadVideo(file, createVideoDto);
+  }
+
+  // New endpoint for trimming a video
+  @Post(':id/trim')
+  async trimVideo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('startTime') startTime: number,
+    @Body('endTime') endTime: number,
+  ) {
+    if (startTime >= endTime) {
+      throw new BadRequestException('Start time must be less than end time');
+    }
+
+    return this.videoService.trimVideo(id, startTime, endTime);
   }
 }
