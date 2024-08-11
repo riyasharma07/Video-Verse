@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Video } from 'src/db/video.entity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class VideoRepository {
@@ -23,11 +24,20 @@ export class VideoRepository {
 
   // Update a video record
   async updateVideo(video: Video): Promise<Video> {
-    return await this.repository.save(video);  // save will update if the entity exists
+    return await this.repository.save(video);
   }
 
   // Delete a video record (if needed)
   async deleteVideo(id: number): Promise<void> {
     await this.repository.delete(id);
   }
+
+  /// Find videos by a list of IDs
+  async getByIds(ids: number[]): Promise<Video[]> {
+    return await this.repository.find({
+      where: {
+        id: In(ids),
+      },
+    });
+}
 }

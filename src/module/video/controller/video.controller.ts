@@ -4,10 +4,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
-import { Express } from 'express'; // This is the correct import for Express types
+import { Express } from 'express';
 import { CreateVideoDto } from '../dto/upload-video.dto';
 import { VideoService } from '../service/video.service';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('videos')
+@ApiBearerAuth()
 @Controller('videos')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
@@ -23,7 +26,7 @@ export class VideoController {
       }
     }),
     limits: {
-      fileSize: 25 * 1024 * 1024, // 25MB limit
+      fileSize: 25 * 1024 * 1024,
     },
     fileFilter: (req, file, cb) => {
       if (!file.mimetype.startsWith('video/')) {
@@ -33,6 +36,9 @@ export class VideoController {
       }
     },
   }))
+  @ApiOperation({ summary: 'Upload a video file with additional metadata' })
+  @ApiResponse({ status: 201, description: 'Video uploaded successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid file or request.' })
   async uploadVideo(
     @UploadedFile() file: Express.Multer.File,
     @Body() createVideoDto: CreateVideoDto,
@@ -44,8 +50,10 @@ export class VideoController {
     return this.videoService.uploadVideo(file, createVideoDto);
   }
 
-  // New endpoint for trimming a video
   @Post(':id/trim')
+  @ApiOperation({ summary: 'Trim an existing video from a specified start time to an end time.' })
+  @ApiResponse({ status: 200, description: 'Video trimmed successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid start or end time.' })
   async trimVideo(
     @Param('id', ParseIntPipe) id: number,
     @Body('startTime') startTime: number,
@@ -56,5 +64,19 @@ export class VideoController {
     }
 
     return this.videoService.trimVideo(id, startTime, endTime);
+  }
+
+  @Post('merge')
+  @ApiOperation({ summary: 'Merge multiple video clips into a single video file.' })
+  @ApiResponse({ status: 200, description: 'Videos merged successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid input.' })
+  async mergeVideos(
+    @Body('videoIds') videoIds: number[],
+  ) {
+    if (!Array.isArray(videoIds)) {
+      throw new BadRequestException('Invalid input: videoIds should be an array');
+    }
+
+    return this.videoService.mergeVideos(videoIds);
   }
 }

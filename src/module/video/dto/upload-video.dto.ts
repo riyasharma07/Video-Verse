@@ -1,12 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateVideoDto {
-  @IsNotEmpty()
-  @IsString()
+  @ApiProperty({ description: 'Title of the video' })
   title: string;
 
-  @IsOptional()
-  @IsString()
+  @ApiProperty({ description: 'Description of the video', required: false })
   description?: string;
 }
