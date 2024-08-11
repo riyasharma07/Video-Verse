@@ -1,73 +1,99 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Video-Verse API
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The Video-Verse API provides functionalities for managing video files. It allows users to upload, trim, and merge videos, all while ensuring that API calls are authenticated with static API tokens.
+
+## Features
+
+1. **Upload Videos**: Upload video files with configurable size and duration limits.
+2. **Trim Videos**: Trim videos to shorten them from the start or end.
+3. **Merge Videos**: Merge multiple video clips into a single video file.
+4. **Authentication**: All API calls are authenticated using static API tokens.
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. **Clone the Repository**
 
-## Running the app
+    ```bash
+    git clone <repository-url>
+    ```
 
-```bash
-# development
-$ npm run start
+2. **Navigate to the Project Directory**
 
-# watch mode
-$ npm run start:dev
+    ```bash
+    cd <project-directory>
+    ```
 
-# production mode
-$ npm run start:prod
-```
+3. **Install Dependencies**
 
-## Test
+    ```bash
+    npm install
+    ```
 
-```bash
-# unit tests
-$ npm run test
+4. **Start the Application**
 
-# e2e tests
-$ npm run test:e2e
+    ```bash
+    npm run start
+    ```
 
-# test coverage
-$ npm run test:cov
-```
+    The application will run on `http://localhost:3000`.
 
-## Support
+## API Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Upload Video
 
-## Stay in touch
+- **Endpoint**: `/videos/upload`
+- **Method**: `POST`
+- **Description**: Upload a video file with additional metadata.
+- **Request**: 
+  - **Form Data**: `file` (required), `title`, `description`
+  - **File Size Limit**: 25MB
+  - **File Type**: Video files only
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Trim Video
 
-## License
+- **Endpoint**: `/videos/:id/trim`
+- **Method**: `POST`
+- **Description**: Trim an existing video from a specified start time to an end time.
+- **Request**: 
+  - **Path Parameter**: `id` (Video ID)
+  - **Body**: `startTime`, `endTime`
+- **Validation**: Start time must be less than end time and within video duration.
 
-Nest is [MIT licensed](LICENSE).
+### Merge Videos
+
+- **Endpoint**: `/videos/merge`
+- **Method**: `POST`
+- **Description**: Merge multiple video clips into a single video file.
+- **Request**: 
+  - **Body**: `videoIds` (Array of Video IDs)
+
+## Swagger UI
+
+The API documentation is available at `http://localhost:3000/api`.
+
+## Packages Used
+
+- **NestJS**: A framework for building efficient, reliable, and scalable server-side applications.
+- **TypeORM**: ORM for TypeScript and JavaScript for database management.
+- **ffmpeg**: A tool to handle video processing tasks.
+- **Swagger UI**: Tool for API documentation and testing.
+- **multer**: Middleware for handling `multipart/form-data`, used for file uploads.
+- **uuid**: Package for generating unique identifiers.
+
+## Choices and Assumptions
+
+- **Static API Tokens**: Used for authentication to simplify security management.
+- **File Size and Duration Limits**: Configured to balance between performance and user needs.
+- **Swagger UI**: Customized for a more polished and user-friendly API documentation interface.
+
+## Assumptions
+
+- The server has sufficient storage and processing capabilities to handle video files.
+- Users have basic knowledge of how to interact with REST APIs.
+- Videos are handled in common formats supported by `ffmpeg`.
+
+## Contributing
+
+Feel free to submit issues or pull requests. For any major changes or suggestions, please open an issue first.

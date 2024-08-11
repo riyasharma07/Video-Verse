@@ -3,6 +3,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './db/dbService';
 import { VideoModule } from './module/video/video.module';
+import { Reflector } from '@nestjs/core';
+import { AuthService } from './guards/auth.service';
+import { ApiAuthGuard } from './guards/api-auth.guard';
 
 @Module({
   imports: [
@@ -18,6 +21,14 @@ import { VideoModule } from './module/video/video.module';
       dataSourceFactory: async () => AppDataSource.initialize(),
     }),
     VideoModule,
+  ],
+  providers: [
+    Reflector,
+    AuthService,
+    {
+      provide: 'APP_GUARD',
+      useClass: ApiAuthGuard,
+    },
   ],
 })
 export class AppModule {}
