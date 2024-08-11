@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Video } from 'src/db/video.entity';
+import { Video } from '../../../db/video.entity';
 import { In } from 'typeorm';
 
 @Injectable()
@@ -21,6 +21,10 @@ export class VideoRepository {
   async getById(id: number): Promise<Video | null> {
     return await this.repository.findOne({ where: { id } });
   }  
+
+  async getByToken(token: string): Promise<Video | null> {
+    return await this.repository.findOne({ where: { shareToken: token } });
+  }
 
   // Update a video record
   async updateVideo(video: Video): Promise<Video> {

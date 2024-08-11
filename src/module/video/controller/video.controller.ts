@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Post, UseInterceptors, UploadedFile, Body, BadRequestException, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, Body, BadRequestException, Param, ParseIntPipe, Get } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
@@ -78,5 +78,22 @@ export class VideoController {
     }
 
     return this.videoService.mergeVideos(videoIds);
+  }
+
+  @Post(':id/share')
+  async shareVideo(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('expiresIn') expiresIn: number,
+  ) {
+    if (expiresIn <= 0) {
+      throw new BadRequestException('Expiry time must be positive');
+    }
+
+    return this.videoService.generateShareableLink(id, expiresIn);
+  }
+
+  @Get('share/:token')
+  async getVideoByShareToken(@Param('token') token: string) {
+    return this.videoService.getVideoByToken(token);
   }
 }

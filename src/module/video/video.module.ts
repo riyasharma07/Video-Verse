@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Video } from 'src/db/video.entity';
+import { Video } from '../../db/video.entity';
 import { VideoRepository } from './repository/video.repository';
 import { VideoService } from './service/video.service';
 import { VideoController } from './controller/video.controller';

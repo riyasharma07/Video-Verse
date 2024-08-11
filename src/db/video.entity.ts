@@ -33,4 +33,10 @@ export class Video {
 
   @Column()
   duration: number;
+
+  @Column({ nullable: true })
+  shareToken: string;
+
+  @Column({ type: 'datetime', nullable: true })
+  shareExpiresAt: Date;
 }

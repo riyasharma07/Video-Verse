@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { Video } from 'src/db/video.entity';
+import { Video } from '../../../db/video.entity';
 import { CreateVideoDto } from '../dto/upload-video.dto';
 import { VideoRepository } from '../repository/video.repository';
 import * as path from 'path';
@@ -9,6 +9,7 @@ import { getVideoDurationInSeconds } from 'get-video-duration';
 import { EntityManager } from 'typeorm';
 import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class VideoService {
@@ -157,5 +158,26 @@ private async performTrim(inputFilePath: string, outputFilePath: string, startTi
         })
         .mergeToFile(outputFilePath);
     });
+  }
+
+  async generateShareableLink(videoId: number, expiresIn: number): Promise<Video> {
+    const video = await this.videoRepository.getById(videoId);
+    if (!video) {
+      throw new BadRequestException('Video not found');
+    }
+
+    video.shareToken = uuidv4();
+    video.shareExpiresAt = new Date(Date.now() + expiresIn);
+
+    return this.videoRepository.save(video);
+  }
+
+  async getVideoByToken(token: string): Promise<Video> {
+    const video = await this.videoRepository.getByToken(token);
+    if (!video || new Date() > video.shareExpiresAt) {
+      throw new BadRequestException('Link is invalid or has expired');
+    }
+
+    return video;
   }
 }
