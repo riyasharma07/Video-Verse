@@ -68,6 +68,26 @@ The Video-Verse API provides functionalities for managing video files. It allows
 - **Description**: Merge multiple video clips into a single video file.
 - **Request**: 
   - **Body**: `videoIds` (Array of Video IDs)
+  
+### Share video 
+
+**Endpoint**: /videos/:id/share
+**Method**: POST
+**Description**: Generate a shareable link for a video with a time-based expiry.
+**Request**:
+**Path Parameter**: id (Video ID)
+**Body**: expiresIn (Time in milliseconds for which the link is valid)
+**Validation**: Expiry time (expiresIn) must be a positive integer.
+
+### Access Video via Shareable Link
+
+**Endpoint**: /videos/share/:token
+**Method**: GET
+**Description**: Access a video via a shareable link token.
+**Request**:
+**Path Parameter**: token (Unique share token)
+**Validation**: The link must not be expired. If the link is expired or invalid, an error will be returned.
+
 
 ## Swagger UI
 
