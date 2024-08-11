@@ -9,17 +9,15 @@ import { getVideoDurationInSeconds } from 'get-video-duration';
 import { EntityManager } from 'typeorm';
 import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class VideoService {
   constructor(
-    @InjectRepository(Video)
-    @InjectEntityManager() private readonly entityManager: EntityManager,
-    private readonly videoRepository: VideoRepository,
-  ) {
-    console.log('VideoRepository injected:', !!this.videoRepository);
-  }
+      @InjectRepository(Video)
+      @InjectEntityManager() private readonly entityManager: EntityManager,
+      private readonly videoRepository: VideoRepository,
+    ) {
+    }
 
     // Existing method to get video duration
     private async getVideoDuration(filePath: string): Promise<number> {
@@ -158,26 +156,5 @@ private async performTrim(inputFilePath: string, outputFilePath: string, startTi
         })
         .mergeToFile(outputFilePath);
     });
-  }
-
-  async generateShareableLink(videoId: number, expiresIn: number): Promise<Video> {
-    const video = await this.videoRepository.getById(videoId);
-    if (!video) {
-      throw new BadRequestException('Video not found');
-    }
-
-    video.shareToken = uuidv4();
-    video.shareExpiresAt = new Date(Date.now() + expiresIn);
-
-    return this.videoRepository.save(video);
-  }
-
-  async getVideoByToken(token: string): Promise<Video> {
-    const video = await this.videoRepository.getByToken(token);
-    if (!video || new Date() > video.shareExpiresAt) {
-      throw new BadRequestException('Link is invalid or has expired');
-    }
-
-    return video;
   }
 }

@@ -6,6 +6,7 @@ import { VideoModule } from './module/video/video.module';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from './guards/auth.service';
 import { ApiAuthGuard } from './guards/api-auth.guard';
+import { SharedLinkModule } from './module/shared-links/shared-links.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ApiAuthGuard } from './guards/api-auth.guard';
       dataSourceFactory: async () => AppDataSource.initialize(),
     }),
     VideoModule,
+    SharedLinkModule
   ],
   providers: [
     Reflector,

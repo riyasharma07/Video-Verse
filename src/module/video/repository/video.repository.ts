@@ -22,10 +22,6 @@ export class VideoRepository {
     return await this.repository.findOne({ where: { id } });
   }  
 
-  async getByToken(token: string): Promise<Video | null> {
-    return await this.repository.findOne({ where: { shareToken: token } });
-  }
-
   // Update a video record
   async updateVideo(video: Video): Promise<Video> {
     return await this.repository.save(video);

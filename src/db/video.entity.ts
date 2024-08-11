@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { User } from './user.entity';
+import { SharedLink } from './links.entity';
 
 @Entity('videos')
 export class Video {
@@ -34,9 +35,6 @@ export class Video {
   @Column()
   duration: number;
 
-  @Column({ nullable: true })
-  shareToken: string;
-
-  @Column({ type: 'datetime', nullable: true })
-  shareExpiresAt: Date;
+  @OneToMany(() => SharedLink, (sharedLink) => sharedLink.video)
+  sharedLinks: SharedLink[];
 }
