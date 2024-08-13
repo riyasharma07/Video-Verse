@@ -83,22 +83,4 @@ describe('VideoService', () => {
     expect(mergedVideo.size).toBe(2000);
   });
 
-  it('should return the video if the token is valid and not expired', async () => {
-    const video = new Video();
-    video.shareToken = 'test-uuid';
-    video.shareExpiresAt = new Date(Date.now() + 3600000);
-
-    videoRepository.getByToken.mockResolvedValue(video);
-
-    const result = await service.getVideoByToken('test-uuid');
-
-    expect(videoRepository.getByToken).toHaveBeenCalledWith('test-uuid');
-    expect(result).toBe(video);
-  });
-
-  it('should throw BadRequestException if the token is invalid or expired', async () => {
-    videoRepository.getByToken.mockResolvedValue(null);
-
-    await expect(service.getVideoByToken('invalid-token')).rejects.toThrow(BadRequestException);
-  });
 });

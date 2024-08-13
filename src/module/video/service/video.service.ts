@@ -13,9 +13,8 @@ import * as ffmpeg from 'fluent-ffmpeg';
 @Injectable()
 export class VideoService {
   constructor(
-      @InjectRepository(Video)
+      @InjectRepository(Video) private readonly videoRepository: VideoRepository,
       @InjectEntityManager() private readonly entityManager: EntityManager,
-      private readonly videoRepository: VideoRepository,
     ) {
     }
 
