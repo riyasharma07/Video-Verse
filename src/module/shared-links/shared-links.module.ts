@@ -3,9 +3,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SharedLinksController } from './controller/shared-links.controller';
 import { SharedLinksService } from './service/shared-links.service';
-import { SharedLink } from 'src/db/links.entity';
+import { SharedLink } from '../../db/links.entity';
 import { SharedLinksRepository } from './repository/shared-links.repository';
-import { Video } from 'src/db/video.entity';
+import { Video } from '../../db/video.entity';
 import { VideoRepository } from '../video/repository/video.repository';
 
 

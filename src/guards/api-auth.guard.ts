@@ -8,10 +8,16 @@ export class ApiAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers['authorization'];
+    const authorizationHeader = request.headers['authorization'];
 
-    if (!token) {
+    if (!authorizationHeader) {
       throw new UnauthorizedException('No API token provided');
+    }
+
+    const [bearer, token] = authorizationHeader.split(' ');
+
+    if (bearer !== 'Bearer' || !token) {
+      throw new UnauthorizedException('Invalid API token format');
     }
 
     const isValid = this.authService.validateToken(token);

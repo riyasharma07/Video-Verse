@@ -2,8 +2,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
-import { VideoRepository } from 'src/module/video/repository/video.repository';
-import { SharedLink } from 'src/db/links.entity';
+import { VideoRepository } from '../../video/repository/video.repository';
+import { SharedLink } from '../../../db/links.entity';
 import { SharedLinksRepository } from '../repository/shared-links.repository';
 
 @Injectable()
