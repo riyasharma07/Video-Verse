@@ -69,25 +69,24 @@ The Video-Verse API provides functionalities for managing video files. It allows
 - **Request**: 
   - **Body**: `videoIds` (Array of Video IDs)
   
-### Share video 
+## Share Video
 
-**Endpoint**: /videos/:id/share
-**Method**: POST
-**Description**: Generate a shareable link for a video with a time-based expiry.
+**Endpoint**: `/videos/:id/share`  
+**Method**: POST  
+**Description**: Generates a shareable link for a video with a time-based expiry.
+
 **Request**:
-**Path Parameter**: id (Video ID)
-**Body**: expiresIn (Time in milliseconds for which the link is valid)
-**Validation**: Expiry time (expiresIn) must be a positive integer.
+- **Path Parameter**:
+  - `id` (number): The unique identifier of the video to be shared.
+- **Body**:
+  - `expiresIn` (number): The time in milliseconds for which the link will be valid. Must be a positive integer.
 
-### Access Video via Shareable Link
+**Validation**:
+- The `expiresIn` value must be a positive integer. A `400 Bad Request` error will be returned if this condition is not met.
 
-**Endpoint**: /videos/share/:token
-**Method**: GET
-**Description**: Access a video via a shareable link token.
-**Request**:
-**Path Parameter**: token (Unique share token)
-**Validation**: The link must not be expired. If the link is expired or invalid, an error will be returned.
-
+**Responses**:
+- **200 OK**: Returns a success message with the generated shareable link.
+- **400 Bad Request**: If `expiresIn` is not a positive integer, an error message will be returned indicating the validation issue.
 
 ## Swagger UI
 
