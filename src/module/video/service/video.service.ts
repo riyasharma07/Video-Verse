@@ -10,7 +10,6 @@ import { EntityManager } from 'typeorm';
 import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
 
-
 @Injectable()
 export class VideoService {
   constructor(
