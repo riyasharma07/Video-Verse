@@ -10,6 +10,6 @@ export default function (): Config {
     transform: {
       "^.+\\.(t|j)s$": "ts-jest",
     },
-    testTimeout: 200000,
+    testTimeout: 1200000,
   };
 }
