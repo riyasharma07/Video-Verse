@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
 import { Video } from '../../../db/video.entity';
 import { CreateVideoDto } from '../dto/upload-video.dto';
 import { VideoRepository } from '../repository/video.repository';
@@ -14,7 +14,7 @@ import * as ffmpeg from 'fluent-ffmpeg';
 @Injectable()
 export class VideoService {
   constructor(
-      @InjectRepository(Video) private readonly videoRepository: VideoRepository,
+      private readonly videoRepository: VideoRepository,
       @InjectEntityManager() private readonly entityManager: EntityManager,
     ) {
     }
@@ -145,7 +145,10 @@ private async performTrim(inputFilePath: string, outputFilePath: string, startTi
         ffmpegCommand.input(filePath);
       });
 
-      ffmpegCommand
+      ffmpeg()
+        .input('concat:' + inputFilePaths.join('|'))
+        .output(outputFilePath)
+        .outputOptions('-c copy')
         .on('end', () => {
           console.log('Merging finished successfully');
           resolve();
@@ -154,7 +157,8 @@ private async performTrim(inputFilePath: string, outputFilePath: string, startTi
           console.error('Error during merging:', err);
           reject(err);
         })
-        .mergeToFile(outputFilePath);
+        .run();
+
     });
   }
 }

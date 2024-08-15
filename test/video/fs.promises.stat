@@ -1,0 +1,11 @@
+import * as fs from 'fs';
+
+jest.mock('fs', () => ({
+  ...jest.requireActual('fs'),
+  promises: {
+    stat: jest.fn().mockResolvedValue({
+      isFile: () => true,
+      size: 1000,
+    }),
+  },
+}));
